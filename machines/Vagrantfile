@@ -10,6 +10,9 @@ Vagrant.configure(2) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  config.landrush.enabled = true
+  config.landrush.tld = 'boink.io'
+
   config.vm.define "vimes" do |vimes|
     vimes.vm.box = "EliasGoldberg/centos7"
     vimes.vm.network "private_network", type: "dhcp"
@@ -77,20 +80,13 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    sudo rpm -Uvh https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.1.noarch.rpm
-    
-    #setup elasticsearch.yml file
-    echo -e "cluster.name: boink\nbootstrap.mlockall: true" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
-    
-    #setup environment variables
-    set +o histexpand
-    echo -e "#!/bin/bash\n \
-    echo 'setting vars'\n \
-    export ES_HEAP_SIZE=512mb" | \
-    sudo tee /etc/profile.d/custom.sh
-    chmod a+x /etc/profile.d/custom.sh
-
-    sudo systemctl enable elasticsearch
-    sudo systemctl start elasticsearch
+    sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+    sudo yum -y install puppet
+    puppet module install puppetlabs/stdlib
+    sudo iptables -I INPUT 1 -p tcp --dport 9200:9400 -j ACCEPT
   SHELL
+
+  config.vm.provision "puppet" do |puppet|
+    puppet.module_path = "modules"
+  end
 end

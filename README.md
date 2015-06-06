@@ -8,7 +8,7 @@ cd <boink repo>/machines
 vagrant init EliasGoldberg/centos6
 vagrant up
 ```
-- In your favorite browser, navigate to http://vimes.boink.io:9200/_plugin/marvel
+- In your favorite browser, navigate to http://vimes.boink.io:9200/_plugin/marvel.
 - You should see a cluster named elasticsearch with three nodes and a status of green.
 
 ## Build the elasticsearch boxes

@@ -26,6 +26,13 @@ Building the EliasGoldberg/centos6 boxes was kind of a process.  It is detailed 
   - settings -> general -> advanced -> drag'nDrop: Bidirectional
 - Start the VM.  When asked, browse to the minimal Centos6 ISO.
 
+### Setup Vagrant
+- Download Vagrant from http://www.vagrantup.com/downloads.html.
+- In your terminal 
+```
+vagrant plugin install landrush
+```
+
 ### Install Centos6
 - Choose the following options:
   - language: english
@@ -101,10 +108,10 @@ mkdir centos6
 vagrant package --output $HOME/centos6.box --base centos6
 ```
 - Login to https://atlas.hashicorp.com/
-- Goto https://atlas.hashicorp.com/EliasGoldberg/boxes/centos7
+- Goto https://atlas.hashicorp.com/EliasGoldberg/boxes/centos6. (Use your name instead of EliasGoldberg.)
 - Click +New Version on left of screen and follow wizard.
 
-## Setting up elasticsearch
+## Setting up ElasticSearch
 At a high level, this is what you need to do to install elasticsearch:
 - Open up the ElasticSearch ports using iptables.
 - Set up the ElasticSearch yum repo.

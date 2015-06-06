@@ -2,32 +2,34 @@
 Scientific Progress Goes Boink!
 
 ## Setup VirtualBox
-Download latest VirtualBox from https://www.virtualbox.org/wiki/Downloads
-Run the installer.
-Download the Centos6 minimal ISO from http://isoredirect.centos.org/centos/6/isos/x86_64/
-Open VirtualBox and click the New button at the upper left.
-  name: centos6
-  memory size: 2048
-  file size: 20 GB
-  settings -> general -> advanced -> shared clipboard: bidirectional
-  settings -> general -> advanced -> drag'nDrop: Bidirectional
-Start the VM.  When asked, browse to the minimal Centos6 ISO.
+- Download latest VirtualBox from https://www.virtualbox.org/wiki/Downloads
+- Run the installer.
+- Download the Centos6 minimal ISO from http://isoredirect.centos.org/centos/6/isos/x86_64/
+- Open VirtualBox and click the New button at the upper left.
+  - name: centos6
+  - memory size: 2048
+  - file size: 20 GB
+  - settings -> general -> advanced -> shared clipboard: bidirectional
+  - settings -> general -> advanced -> drag'nDrop: Bidirectional
+- Start the VM.  When asked, browse to the minimal Centos6 ISO.
 
 ## Install Centos6
-  Choose the following options:
-    language: english
-    root password: vagrant
+- Choose the following options:
+  - language: english
+  - root password: vagrant
 
 ## Setup Centos6 Networking
-  Login as root
-  useradd vagrant
+- Login as root
+- useradd vagrant
   passwd vagrant
-  vi /etc/sysconfig/network-scripts/ifcfg-eth0
-  # change ONBOOT to yes
-  service network start
-  yum update # this also tests if we have internet access.
-  shutdown -r now
-  yum update kernel # this also tests if we have internet access after the reboot.
+```
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+# change ONBOOT to yes
+service network start
+yum update # this also tests if we have internet access.
+shutdown -r now
+yum update kernel # this also tests if we have internet access after the reboot.
+```
 
 ## Install Guest Additions
   Download guest additions from http://download.virtualbox.org/virtualbox/<version>/VBoxGuestAdditions_4.3.28.iso
@@ -51,16 +53,16 @@ Start the VM.  When asked, browse to the minimal Centos6 ISO.
   sudo rpm -ivh jre-8u45-linux-x64.rpm
 
 ## Setup Vagrant tools
-  yum install -y openssh-clients man git vim wget curl ntp nano
-  chkconfig ntpd on && chkconfig sshd on
-  sed -i -e 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
-  sed -i 's/^\(Defaults.*requiretty\)/#\1/' /etc/sudoers
-  echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-  mkdir /home/vagrant/.ssh && chmod 700 /home/vagrant/.ssh
-  wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
-  chmod 600 /home/vagrant/.ssh/authorized_keys
-  chown -R vagrant:vagrant /home/vagrant
-  shutdown -h now
+- yum install -y openssh-clients man git vim wget curl ntp nano
+- chkconfig ntpd on && chkconfig sshd on
+- sed -i -e 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+- sed -i 's/^\(Defaults.*requiretty\)/#\1/' /etc/sudoers
+- echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+- mkdir /home/vagrant/.ssh && chmod 700 /home/vagrant/.ssh
+- wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
+- chmod 600 /home/vagrant/.ssh/authorized_keys
+- chown -R vagrant:vagrant /home/vagrant
+- shutdown -h now
 
 ## Build the Vagrant package
   cd ~

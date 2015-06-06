@@ -5,7 +5,6 @@ Scientific Progress Goes Boink!
 - In your terminal
 ```
 cd <boink repo>/machines
-vagrant init EliasGoldberg/centos6
 vagrant up
 ```
 - In your favorite browser, navigate to http://vimes.boink.io:9200/_plugin/marvel.
@@ -17,6 +16,8 @@ Building the EliasGoldberg/centos6 boxes was kind of a process.  It is detailed 
 ### Setup VirtualBox
 - Download latest VirtualBox from https://www.virtualbox.org/wiki/Downloads.
 - Run the installer.
+
+### Setup a new VM
 - Download the Centos6 minimal ISO from http://isoredirect.centos.org/centos/6/isos/x86_64/.
 - Open VirtualBox and click the New button at the upper left.
   - name: centos6

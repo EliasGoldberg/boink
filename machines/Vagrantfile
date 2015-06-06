@@ -13,21 +13,39 @@ Vagrant.configure(2) do |config|
   config.landrush.enabled = true
   config.landrush.tld = 'boink.io'
 
+  config.vm.box = "EliasGoldberg/centos6"
+  config.vm.network "private_network", type: "dhcp"
+  
   config.vm.define "vimes" do |vimes|
-    vimes.vm.box = "EliasGoldberg/centos7"
-    vimes.vm.network "private_network", type: "dhcp"
     vimes.vm.hostname = "vimes.boink.io"
+    vimes.vm.provision "shell", inline: <<-SHELL
+      echo -e 'network.host: _eth1:ipv4_\ndiscovery.zen.ping.multicast.enabled: false\ndiscovery.zen.ping.unicast.hosts: ["colon.boink.io","nobbs.boink.io"]\n' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+      sudo chkconfig --add elasticsearch
+      sudo service elasticsearch start
+    SHELL
   end
 
   config.vm.define "colon" do |colon|
-    colon.vm.box = "EliasGoldberg/centos7"
-    colon.vm.network "private_network", type: "dhcp"
     colon.vm.hostname = "colon.boink.io"
+    colon.vm.provision "shell", inline: <<-SHELL
+      echo -e 'network.host: _eth1:ipv4_\ndiscovery.zen.ping.multicast.enabled: false\ndiscovery.zen.ping.unicast.hosts: ["vimes.boink.io","nobbs.boink.io"]\n' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+      sudo chkconfig --add elasticsearch
+      sudo service elasticsearch start
+    SHELL
+  end  
+
+  config.vm.define "nobbs" do |nobbs|
+    nobbs.vm.hostname = "nobbs.boink.io"
+    nobbs.vm.provision "shell", inline: <<-SHELL
+      echo -e 'network.host: _eth1:ipv4_\ndiscovery.zen.ping.multicast.enabled: false\ndiscovery.zen.ping.unicast.hosts: ["vimes.boink.io","colon.boink.io"]\n' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+      sudo chkconfig --add elasticsearch
+      sudo service elasticsearch start
+    SHELL
   end  
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  #config.vm.box = "EliasGoldberg/centos7"
+  #config.vm.box = "EliasGoldberg/centos6"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -80,13 +98,20 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
-    sudo yum -y install puppet
-    puppet module install puppetlabs/stdlib
-    sudo iptables -I INPUT 1 -p tcp --dport 9200:9400 -j ACCEPT
+    sudo iptables -I INPUT 1 -p tcp --dport 9200 -j ACCEPT
+    sudo iptables -I INPUT 1 -p tcp --dport 9300 -j ACCEPT
+    sudo service iptables save
+    sudo service network restart
+    
+    sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+
+    echo -e "[elasticsearch-1.5]\nname=Elasticsearch repository for 1.5.x packages\nbaseurl=http://packages.elastic.co/elasticsearch/1.5/centos\ngpgcheck=1\ngpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch\nenabled=1\n" | sudo tee -a /etc/yum.repos.d/elasticsearch.repo
+
+    sudo yum -y install elasticsearch
+    sudo /usr/share/elasticsearch/bin/plugin -i elasticsearch/marvel/latest
   SHELL
 
-  config.vm.provision "puppet" do |puppet|
-    puppet.module_path = "modules"
-  end
+  #config.vm.provision "puppet" do |puppet|
+  #  puppet.module_path = "modules"
+  #end
 end

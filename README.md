@@ -4,7 +4,7 @@ Scientific Progress Goes Boink!
 ### Start the Elasticsearch boxes
 - In your terminal
 ```
-cd navigate to <boink repo>/machines
+cd <boink repo>/machines
 vagrant init EliasGoldberg/centos6
 vagrant up
 ```
@@ -15,9 +15,9 @@ vagrant up
 Building the EliasGoldberg/centos6 boxes was kind of a process.  It is detailed below.
 
 ### Setup VirtualBox
-- Download latest VirtualBox from https://www.virtualbox.org/wiki/Downloads
+- Download latest VirtualBox from https://www.virtualbox.org/wiki/Downloads.
 - Run the installer.
-- Download the Centos6 minimal ISO from http://isoredirect.centos.org/centos/6/isos/x86_64/
+- Download the Centos6 minimal ISO from http://isoredirect.centos.org/centos/6/isos/x86_64/.
 - Open VirtualBox and click the New button at the upper left.
   - name: centos6
   - memory size: 2048
@@ -33,7 +33,7 @@ Building the EliasGoldberg/centos6 boxes was kind of a process.  It is detailed 
 
 ### Setup Centos6 Networking
 - Login to the VM as root
-- in the VM bash shell
+- In the VM bash shell
 ```
 useradd vagrant
 passwd vagrant
@@ -46,7 +46,7 @@ yum update kernel # this also tests if we have internet access after the reboot.
 ```
 
 ### Install Guest Additions
-- Download guest additions from http://download.virtualbox.org/virtualbox/<version>/VBoxGuestAdditions_4.3.28.iso
+- Download guest additions from http://download.virtualbox.org/virtualbox/4.3.28/VBoxGuestAdditions_4.3.28.iso. (Double check the VirtualBox version.)
 - In the VM bash shell
 ```
 yum install -y gcc make kernel-revel bzip2 perl
@@ -63,7 +63,7 @@ shutodwn -r now
 ```
 
 ### Install Java
-- Download 64-bit JRE from http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
+- Download 64-bit JRE from http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html.
 - Go to settings, Shared Folders, Hit the plus icon.
 - Browse to the directory containing the jre and choose auto mount and make permanent.
 - In the VM bash shell
